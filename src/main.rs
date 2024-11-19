@@ -4,6 +4,13 @@ use std::time::Duration;
 use url::Url;
 use uuid::Uuid;
 
+#[derive(Serialize, Deserialize, Debug)]
+struct User {
+    name: String,
+    email: String,
+    birthdate: String,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 struct Request {
     #[serde(rename = "type")]
@@ -63,16 +70,28 @@ enum RequestType {
 }
 
 fn main() {
+    let user = User {
+        name: "Іван".to_string(),
+        email: "ivan@example.com".to_string(),
+        birthdate: "2000-01-01".to_string(),
+    };
+
+    let user_json = serde_json::to_string(&user).unwrap();
+    println!("User serialized: {}", user_json);
+
+    let deserialized_user: User = serde_json::from_str(&user_json).unwrap();
+    println!("User deserialized: {:?}", deserialized_user);
+
     let event = Event {
         name: "Event 1".to_owned(),
         date: "2024-11-14".to_owned(),
     };
 
     let event_json = serde_json::to_string(&event).unwrap();
-    println!("\n{}", event_json);
+    println!("Event serialized: {}", event_json);
 
-    let des_event: Event = serde_json::from_str(&event_json).unwrap();
-    println!("{:?}", des_event);
+    let deserialized_event: Event = serde_json::from_str(&event_json).unwrap();
+    println!("Event deserialized: {:?}", deserialized_event);
 
     let request_json = std::fs::read_to_string("request.json").unwrap();
     let request: Request = serde_json::from_str(&request_json).unwrap();
