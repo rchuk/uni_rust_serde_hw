@@ -68,11 +68,20 @@ fn main() {
         date: "2024-11-14".to_owned(),
     };
 
-    let json = serde_json::to_string(&event).unwrap();
-    println!("\n{}", json);
+    let event_json = serde_json::to_string(&event).unwrap();
+    println!("\n{}", event_json);
 
-    let des_event: Event = serde_json::from_str(&json).unwrap();
+    let des_event: Event = serde_json::from_str(&event_json).unwrap();
     println!("{:?}", des_event);
+
+    let request_json = std::fs::read_to_string("request.json").unwrap();
+    let request: Request = serde_json::from_str(&request_json).unwrap();
+
+    let yaml_str = serde_yaml::to_string(&request).unwrap();
+    println!("YAML:\n{}", yaml_str);
+
+    let toml_str = toml::to_string(&request).unwrap();
+    println!("TOML:\n{}", toml_str);
 }
 #[cfg(test)]
 mod tests {
